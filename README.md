@@ -57,3 +57,20 @@ Run the packaged app bundle from the command line:
 open MacCleaner.app
 ```
 Alternatively, double-click the **`MacCleaner`** application icon in Finder inside this directory.
+
+---
+
+## Product Landing Page Website
+
+A high-fidelity, dark-theme landing page is included in the `docs/` folder (and in the separate `mac_cleaner_website` folder on the Desktop) to promote and distribute the utility.
+
+### Features
+- **Sleek Glassmorphic Design**: Matching the app’s SwiftUI HUD theme.
+- **Interactive Mockup Simulator**: Lets users test-drive the scanning, filtering, and cleaning experience directly from their browser.
+- **SEO Optimized**: Fully equipped with structural schemas, JSON-LD meta tags, canonical definitions, image descriptions, sitemap.xml, and robots.txt.
+- **Direct Download**: Features immediate direct-download access to the pre-compiled application bundle (`MacCleaner.zip`).
+
+### Hosting on GitHub Pages
+The website is served directly via GitHub Pages from the `docs/` directory of the `main` branch:
+- **URL**: `https://ahmedelmwafy.github.io/mac_cleaner/`
+
