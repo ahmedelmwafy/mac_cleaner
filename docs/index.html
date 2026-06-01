@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacCleaner - Native macOS Cache, Log, and Developer Build Cleanup Utility</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="A premium, native macOS desktop cleaner written in Swift and SwiftUI. Scan and delete Xcode DerivedData, Gradle Cache, Android Caches, and Flutter build folders securely.">
+    <meta name="keywords" content="mac cleaner, macOS cache cleaner, gradle cache, android studio cache, xcode deriveddata, flutter clean tool, hidden files finder, swiftui utility, mac optimization">
+    <meta name="author" content="Ahmed Elmwafy">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MacCleaner - Native macOS Developer Cleanup Utility">
+    <meta property="og:description" content="Clear cache files, logs, Xcode DerivedData, and Gradle/Android/Flutter build files safely with a high-fidelity native macOS application.">
+    <meta property="og:image" content="logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="MacCleaner - Native macOS Developer Cleanup Utility">
+    <meta property="twitter:description" content="Clear cache files, logs, Xcode DerivedData, and Gradle/Android/Flutter build files safely with a high-fidelity native macOS application.">
+    <meta property="twitter:image" content="logo.png">
+
+    <!-- Favicon and Touch Icon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "MacCleaner",
+      "operatingSystem": "macOS",
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "description": "A high-fidelity Swift/SwiftUI application for scanning and cleaning macOS caches, logs, Xcode data, Gradle/Android caches, and project builds.",
+      "downloadUrl": "https://ahmedelmwafy.github.io/mac_cleaner/MacCleaner.zip",
+      "author": {
+        "@type": "Person",
+        "name": "Ahmed Elmwafy",
+        "url": "https://github.com/ahmedelmwafy"
+      }
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://ahmedelmwafy.github.io/mac_cleaner/">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Glow Backdrops for Modern UI Aesthetics -->
+    <div class="glow-bg-primary" aria-hidden="true"></div>
+    <div class="glow-bg-secondary" aria-hidden="true"></div>
+
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="#" class="logo-area">
+                <img src="logo.png" alt="MacCleaner Logo" class="app-logo">
+                <span class="app-title font-outfit">Mac<span class="gradient-text-blue">Cleaner</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#simulator" class="nav-link">Interactive Demo</a>
+                <a href="MacCleaner.zip" class="btn btn-secondary btn-small" download>Direct Download</a>
+            </nav>
+            <button class="mobile-nav-toggle" id="mobile-menu-btn" aria-label="Toggle menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-nav-overlay" id="mobile-overlay">
+        <nav class="mobile-nav-links">
+            <a href="#features" class="mobile-link">Features</a>
+            <a href="#simulator" class="mobile-link">Interactive Demo</a>
+            <a href="MacCleaner.zip" class="btn btn-primary btn-large" download>Download Now</a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge-container">
+                    <span class="badge gradient-badge">🎉 macOS Developer Tool</span>
+                    <span class="badge offline-badge">🔒 100% Secure & Offline</span>
+                </div>
+                <h1 class="hero-title font-outfit">
+                    Keep your Mac clean. <br>
+                    <span class="gradient-text-vibrant">Speed up compilation.</span>
+                </h1>
+                <p class="hero-description">
+                    A native, lightning-fast macOS cleanup utility built with SwiftUI. Safely scan and delete project build folders (Flutter, Node.js, Gradle, Xcode) and standard caches to reclaim gigabytes of disk space.
+                </p>
+                <div class="hero-actions">
+                    <a href="MacCleaner.zip" class="btn btn-primary btn-large font-outfit" id="hero-btn-download" download>
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        Direct Download (.zip)
+                    </a>
+                    <a href="https://github.com/ahmedelmwafy/mac_cleaner" target="_blank" class="btn btn-outline btn-large font-outfit">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        View on GitHub
+                    </a>
+                </div>
+                <div class="hero-meta">
+                    <span class="meta-item">
+                        <svg class="meta-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        Apple Silicon & Intel Native
+                    </span>
+                    <span class="meta-item">
+                        <svg class="meta-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        macOS 12.0+ (SwiftUI Engine)
+                    </span>
+                </div>
+            </div>
+            
+            <div class="hero-visual" id="simulator">
+                <!-- Glowing Application window mockup -->
+                <div class="mac-preview-container">
+                    <div class="mac-screen-shine"></div>
+                    <div class="mac-desktop-content">
+                        <!-- macOS App Window Frame -->
+                        <div class="mac-app-window">
+                            <!-- Window Titlebar -->
+                            <div class="mac-window-titlebar">
+                                <div class="window-controls">
+                                    <span class="control-dot close-dot"></span>
+                                    <span class="control-dot minimize-dot"></span>
+                                    <span class="control-dot expand-dot"></span>
+                                </div>
+                                <div class="window-title font-outfit">MacCleaner - Developer Edition</div>
+                            </div>
+                            
+                            <!-- Application Split Layout -->
+                            <div class="app-split-container">
+                                <!-- Sidebar -->
+                                <aside class="app-sidebar">
+                                    <div class="sidebar-header">
+                                        <img src="logo.png" alt="Icon" class="sidebar-logo">
+                                        <div>
+                                            <div class="sidebar-title font-outfit">MacCleaner</div>
+                                            <div class="sidebar-subtitle">Dev Edition</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <ul class="sidebar-list">
+                                        <li class="sidebar-item active" data-target="dashboard">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-blue" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 12L16 10"/><circle cx="12" cy="12" r="1"/></svg>
+                                            Dashboard
+                                        </li>
+                                        <li class="sidebar-item" data-target="userCaches">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-blue" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                            User Caches
+                                            <span class="item-size-badge" id="badge-userCaches">1.2G</span>
+                                        </li>
+                                        <li class="sidebar-item" data-target="devProjects">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-pink" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                            Project Builds
+                                            <span class="item-size-badge" id="badge-devProjects">14.2G</span>
+                                        </li>
+                                        <li class="sidebar-item" data-target="xcodeJunk">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-purple" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zM9 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3z"/></svg>
+                                            Xcode DerivedData
+                                            <span class="item-size-badge" id="badge-xcodeJunk">8.4G</span>
+                                        </li>
+                                        <li class="sidebar-item" data-target="gradleCache">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-green" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                                            Gradle Cache
+                                            <span class="item-size-badge" id="badge-gradleCache">3.1G</span>
+                                        </li>
+                                        <li class="sidebar-item" data-target="androidCache">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-green" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                            Android Cache
+                                            <span class="item-size-badge" id="badge-androidCache">2.4G</span>
+                                        </li>
+                                        <li class="sidebar-item" data-target="trash">
+                                            <svg viewBox="0 0 24 24" class="sidebar-icon color-muted" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            System Trash
+                                            <span class="item-size-badge" id="badge-trash">450M</span>
+                                        </li>
+                                    </ul>
+                                </aside>
+                                
+                                <!-- Main Content Area -->
+                                <main class="app-main-panel">
+                                    <!-- Dashboard View Container -->
+                                    <div class="view-panel active" id="view-dashboard">
+                                        <div class="view-dashboard-layout">
+                                            <div class="dashboard-top">
+                                                <!-- Glowing Ring -->
+                                                <div class="dashboard-gauge">
+                                                    <svg class="gauge-svg" viewBox="0 0 100 100">
+                                                        <circle cx="50" cy="50" r="40" class="gauge-track"></circle>
+                                                        <circle cx="50" cy="50" r="40" class="gauge-fill" id="dashboard-ring-fill"></circle>
+                                                    </svg>
+                                                    <div class="gauge-content">
+                                                        <div class="gauge-size font-mono" id="dashboard-cleanable-size">29.7 GB</div>
+                                                        <div class="gauge-label">Cleanable Junk</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="dashboard-intro">
+                                                    <h3 class="font-outfit">System Overview</h3>
+                                                    <p>Scan caches, logs, Xcode temporary structures, and project build assets safely to optimize compiler operations and reclaim disk storage.</p>
+                                                    <div class="intro-buttons">
+                                                        <button class="btn btn-secondary btn-small" id="sim-btn-scan">Scan All</button>
+                                                        <button class="btn btn-primary btn-small btn-red" id="sim-btn-clean">Clean Selected</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Overview cards grid -->
+                                            <div class="dashboard-grid">
+                                                <div class="dash-card card-hover-blue" data-nav="userCaches">
+                                                    <div class="dash-card-icon color-blue">📁</div>
+                                                    <div class="dash-card-details">
+                                                        <div class="dash-card-title">User Caches</div>
+                                                        <div class="dash-card-size font-mono" id="card-size-userCaches">1.2 GB</div>
+                                                    </div>
+                                                </div>
+                                                <div class="dash-card card-hover-pink" data-nav="devProjects">
+                                                    <div class="dash-card-icon color-pink">🛠️</div>
+                                                    <div class="dash-card-details">
+                                                        <div class="dash-card-title">Project Builds</div>
+                                                        <div class="dash-card-size font-mono" id="card-size-devProjects">14.2 GB</div>
+                                                    </div>
+                                                </div>
+                                                <div class="dash-card card-hover-purple" data-nav="xcodeJunk">
+                                                    <div class="dash-card-icon color-purple">🔨</div>
+                                                    <div class="dash-card-details">
+                                                        <div class="dash-card-title">Xcode DerivedData</div>
+                                                        <div class="dash-card-size font-mono" id="card-size-xcodeJunk">8.4 GB</div>
+                                                    </div>
+                                                </div>
+                                                <div class="dash-card card-hover-green" data-nav="gradleCache">
+                                                    <div class="dash-card-icon color-green">📦</div>
+                                                    <div class="dash-card-details">
+                                                        <div class="dash-card-title">Gradle Cache</div>
+                                                        <div class="dash-card-size font-mono" id="card-size-gradleCache">3.1 GB</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Detailed View Container -->
+                                    <div class="view-panel" id="view-details">
+                                        <div class="details-layout">
+                                            <div class="details-header">
+                                                <h3 class="font-outfit" id="details-view-title">User Caches</h3>
+                                                <div class="details-path font-mono" id="details-view-path">~/Library/Caches</div>
+                                            </div>
+                                            
+                                            <div class="details-filters">
+                                                <span class="filter-label">Select:</span>
+                                                <button class="filter-btn" id="filter-all">All</button>
+                                                <button class="filter-btn" id="filter-none">None</button>
+                                                <button class="filter-btn" id="filter-hidden">Hidden Only</button>
+                                                <button class="filter-btn" id="filter-visible">Visible Only</button>
+                                            </div>
+                                            
+                                            <!-- Files Checklist -->
+                                            <div class="details-list-container">
+                                                <ul class="details-list" id="sim-details-list">
+                                                    <!-- Dynamic checklist items -->
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Clean Success Screen -->
+                                    <div class="view-panel" id="view-success">
+                                        <div class="success-screen">
+                                            <div class="success-icon">✓</div>
+                                            <h3 class="font-outfit">System Cleaned!</h3>
+                                            <p>Reclaimed disk space successfully.</p>
+                                            <div class="success-metrics">
+                                                <div class="metric-box">
+                                                    <span class="metric-val font-mono" id="success-reclaimed-size">29.7 GB</span>
+                                                    <span class="metric-lbl">Freed Space</span>
+                                                </div>
+                                                <div class="metric-box">
+                                                    <span class="metric-val font-mono" id="success-reclaimed-items">48</span>
+                                                    <span class="metric-lbl">Items Removed</span>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-small" id="success-back-btn">Back to Dashboard</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Console Log drawer -->
+                                    <div class="app-console-drawer">
+                                        <div class="console-header" id="console-header-btn">
+                                            <span>📟 Process Console Log</span>
+                                            <span class="console-arrow">▲</span>
+                                        </div>
+                                        <div class="console-body" id="console-body-logs">
+                                            <!-- Terminal output lines -->
+                                            <div class="console-line text-muted">Console idle. Scan or clean system to trace actions.</div>
+                                        </div>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Simulator controls -->
+    <section class="simulator-panel-section" id="interactive-lab">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tagline font-outfit">LIVE INTERACTIVE LAB</span>
+                <h2 class="section-title font-outfit">Interact and Test the Cleaner</h2>
+                <p class="section-desc">
+                    Click actions inside the simulated Mac window above to trigger a cleanup scan. You can select categories in the sidebar, toggle individual files, filter for hidden files, and monitor real-time file deletions in the green process terminal console.
+                </p>
+            </div>
+            
+            <div class="panel-layout">
+                <div class="panel-card glassmorphism">
+                    <h3 class="panel-card-title font-outfit">
+                        <span class="title-step">1</span> System Scanner Controls
+                    </h3>
+                    <p class="panel-card-text">
+                        Use this interface console to run a full sweep or trigger custom folder scanning to simulate deep cache inspection.
+                    </p>
+                    
+                    <div class="sample-copy-chips">
+                        <button class="copy-chip font-outfit" id="ctrl-scan-all">
+                            🔍 Sweep All Directories
+                        </button>
+                        <button class="copy-chip font-outfit" id="ctrl-clean-selected">
+                            🧹 Clean Checked Items
+                        </button>
+                        <button class="copy-chip font-outfit" id="ctrl-custom-scan">
+                            📂 Simulate Custom Directory Scan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-card glassmorphism">
+                    <h3 class="panel-card-title font-outfit">
+                        <span class="title-step">2</span> How Cache Deletion Works
+                    </h3>
+                    <div class="app-instructions-list">
+                        <div class="instruction-item">
+                            <div class="instruction-icon font-outfit">⚙️</div>
+                            <div class="instruction-details">
+                                <h4 class="instruction-title font-outfit">Project Builds Analyzer</h4>
+                                <p class="instruction-text">Flutter (`build/`), Node.js (`node_modules/`), Gradle (`build/`), and Xcode temporary logs are parsed, recursive directory sizes calculated, and compiled folders prepared for deletion.</p>
+                            </div>
+                        </div>
+                        <div class="instruction-item">
+                            <div class="instruction-icon font-outfit">👁️</div>
+                            <div class="instruction-details">
+                                <h4 class="instruction-title font-outfit">Hidden Files Parser</h4>
+                                <p class="instruction-text">Hidden folder resources (prefix with dot `.`) and standard folders are isolated separately. Use the filters in the simulator list to select them easily.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key App Features Section (Bento Grid Style) -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tagline font-outfit">SPEED UP YOUR COMPILES</span>
+                <h2 class="section-title font-outfit">Premium Bento Architecture</h2>
+                <p class="section-desc">Designed with high-level macOS APIs and optimized to delete deep-nested cache directories securely.</p>
+            </div>
+
+            <!-- Bento Layout Grid -->
+            <div class="bento-grid">
+                <!-- Large card (Developer cleaner) -->
+                <div class="bento-card bento-lg glassmorphism">
+                    <div class="feature-icon-wrapper gradient-blue">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">Compiler Build Sweeper</h3>
+                    <p class="feature-content" style="margin-bottom: 20px;">
+                        MacCleaner targets massive developer workspace folders, identifying deep project-level build folders that standard disk cleaners ignore. Recover gigabytes of storage safely with direct path integrations:
+                    </p>
+                    <div class="bento-technologies">
+                        <span class="tech-tag">Flutter (build, .dart_tool)</span>
+                        <span class="tech-tag">React Native / Node.js (node_modules)</span>
+                        <span class="tech-tag">Xcode (DerivedData)</span>
+                        <span class="tech-tag">Gradle (caches, transforms-3)</span>
+                        <span class="tech-tag">Swift Package Manager (.build)</span>
+                    </div>
+                </div>
+
+                <!-- Medium card 1 (Granular Checklist) -->
+                <div class="bento-card bento-md glassmorphism">
+                    <div class="feature-icon-wrapper gradient-indigo">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9h3"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">Granular Checks</h3>
+                    <p class="feature-content">
+                        No black-box sweeps. Inspect individual folders, read exact file paths, examine nested directory structures, and selectively clean target items while leaving configurations safe.
+                    </p>
+                </div>
+
+                <!-- Medium card 2 (Hidden Files Finder) -->
+                <div class="bento-card bento-md glassmorphism">
+                    <div class="feature-icon-wrapper gradient-orange">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">Hidden Files & Dotfiles</h3>
+                    <p class="feature-content">
+                        Scan arbitrary local folders to detect hidden assets (names starting with dot `.`). Use instant filter buttons to clean system files like `.DS_Store` or `.env` templates.
+                    </p>
+                </div>
+
+                <!-- Small card 1 (Sandbox privacy) -->
+                <div class="bento-card bento-sm glassmorphism">
+                    <div class="feature-icon-wrapper gradient-teal">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">100% Offline</h3>
+                    <p class="feature-content">
+                        Executes locally on your Mac. No network calls requested or allowed, ensuring your local code data stays entirely private and un-tracked.
+                    </p>
+                </div>
+
+                <!-- Small card 2 (Swift UI design) -->
+                <div class="bento-card bento-sm glassmorphism">
+                    <div class="feature-icon-wrapper gradient-pink">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">Vibrant HUD Design</h3>
+                    <p class="feature-content">
+                        Rendered with SwiftUI materials (`VisualEffectView`). Dark mode gradients align beautifully with your wallpapers and system colors.
+                    </p>
+                </div>
+
+                <!-- Small card 3 (Swift native performance) -->
+                <div class="bento-card bento-sm glassmorphism">
+                    <div class="feature-icon-wrapper gradient-purple">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h3 class="feature-title font-outfit">Swift 6.2 Speeds</h3>
+                    <p class="feature-content">
+                        Compiled natively to run with negligible memory usage, scanning hundreds of directories recursively in milliseconds.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download-section" id="download">
+        <div class="container">
+            <div class="download-card">
+                <div class="download-glow" aria-hidden="true"></div>
+                <div class="download-content">
+                    <img src="logo.png" alt="MacCleaner Icon" class="download-app-icon">
+                    <h2 class="download-title font-outfit">Get MacCleaner Utility</h2>
+                    <p class="download-description">
+                        Start using a clean, native, and extremely secure cache cleaning utility. Compile and build the native app from the GitHub repository source code or download the pre-compiled binary instantly.
+                    </p>
+                    
+                    <div class="download-button-wrapper">
+                        <a href="MacCleaner.zip" class="btn btn-primary btn-large font-outfit" id="download-release-btn" download>
+                            Download Native macOS App (.zip)
+                        </a>
+                    </div>
+
+                    <div class="requirements-list">
+                        <span class="requirement-item font-outfit">✓ Free & Open Source</span>
+                        <span class="requirement-item font-outfit">✓ Native Apple Silicon Supported</span>
+                        <span class="requirement-item font-outfit">✓ 100% Secure & Offline</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">
+                    <img src="logo.png" alt="App Logo" class="footer-logo-img">
+                    <span class="footer-app-name font-outfit">MacCleaner</span>
+                </div>
+                <p class="footer-copyright">
+                    © 2026 Ahmed Elmwafy. Created under the MIT license. Designed for developers who love a fast, tidy workspace.
+                </p>
+            </div>
+            <div class="footer-right">
+                <div class="footer-links-group">
+                    <h5 class="footer-links-title font-outfit">Product</h5>
+                    <a href="#features">Features</a>
+                    <a href="#simulator">Interactive Lab</a>
+                    <a href="https://github.com/ahmedelmwafy/mac_cleaner" target="_blank">Repository</a>
+                </div>
+                <div class="footer-links-group">
+                    <h5 class="footer-links-title font-outfit">Connect</h5>
+                    <a href="mailto:ahmedelmwafy@gmail.com">Email</a>
+                    <a href="https://github.com/ahmedelmwafy" target="_blank">GitHub</a>
+                    <a href="https://linkedin.com/in/ahmedelmwafy" target="_blank">LinkedIn</a>
+                    <a href="https://facebook.com/ahmedelmwafy" target="_blank">Facebook</a>
+                    <a href="https://youtube.com/ahmedelmwafy" target="_blank">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script file -->
+    <script src="script.js"></script>
+</body>
+</html>
