@@ -5,6 +5,9 @@ enum ScanCategoryType: String, CaseIterable, Identifiable {
     case userCaches = "User Caches"
     case systemCaches = "System Caches"
     case userLogs = "User Logs"
+    case phpCache = "PHP Cache"
+    case nodeCache = "Node.js Cache"
+    case pythonCache = "Python & Dev Caches"
     case xcodeJunk = "Xcode DerivedData"
     case gradleCache = "Gradle Cache"
     case androidCache = "Android Cache"
@@ -50,6 +53,49 @@ class Scanner {
             return [URL(fileURLWithPath: "/Library/Caches")]
         case .userLogs:
             return [home.appendingPathComponent("Library/Logs")]
+        case .phpCache:
+            var paths: [URL] = []
+            let composer = home.appendingPathComponent(".composer/cache")
+            if fm.fileExists(atPath: composer.path) { paths.append(composer) }
+            let phpCache = home.appendingPathComponent(".php/cache")
+            if fm.fileExists(atPath: phpCache.path) { paths.append(phpCache) }
+            let tmp = URL(fileURLWithPath: "/tmp")
+            if let contents = try? fm.contentsOfDirectory(at: tmp, includingPropertiesForKeys: nil, options: []) {
+                for url in contents {
+                    if url.lastPathComponent.hasPrefix("php") {
+                        paths.append(url)
+                    }
+                }
+            }
+            return paths
+        case .nodeCache:
+            var paths: [URL] = []
+            let npm = home.appendingPathComponent(".npm")
+            if fm.fileExists(atPath: npm.path) { paths.append(npm) }
+            let yarn = home.appendingPathComponent(".yarn/cache")
+            if fm.fileExists(atPath: yarn.path) { paths.append(yarn) }
+            let pnpm = home.appendingPathComponent(".pnpm-store")
+            if fm.fileExists(atPath: pnpm.path) { paths.append(pnpm) }
+            let bun = home.appendingPathComponent(".bun/install/cache")
+            if fm.fileExists(atPath: bun.path) { paths.append(bun) }
+            let gyp = home.appendingPathComponent(".node-gyp")
+            if fm.fileExists(atPath: gyp.path) { paths.append(gyp) }
+            return paths
+        case .pythonCache:
+            var paths: [URL] = []
+            let pip = home.appendingPathComponent("Library/Caches/pip")
+            if fm.fileExists(atPath: pip.path) { paths.append(pip) }
+            let poetry = home.appendingPathComponent("Library/Caches/pypoetry")
+            if fm.fileExists(atPath: poetry.path) { paths.append(poetry) }
+            let cocoapods = home.appendingPathComponent("Library/Caches/CocoaPods")
+            if fm.fileExists(atPath: cocoapods.path) { paths.append(cocoapods) }
+            let swiftpm = home.appendingPathComponent("Library/Caches/org.swift.swiftpm")
+            if fm.fileExists(atPath: swiftpm.path) { paths.append(swiftpm) }
+            let cargo = home.appendingPathComponent(".cargo/registry")
+            if fm.fileExists(atPath: cargo.path) { paths.append(cargo) }
+            let gomod = home.appendingPathComponent("go/pkg/mod")
+            if fm.fileExists(atPath: gomod.path) { paths.append(gomod) }
+            return paths
         case .xcodeJunk:
             return [home.appendingPathComponent("Library/Developer/Xcode/DerivedData")]
         case .gradleCache:
@@ -210,6 +256,63 @@ class Scanner {
             }
             if fm.fileExists(atPath: buildURL.path) {
                 projectItems.append((name: "Xcode Local Build", subURL: buildURL, isDir: true))
+            }
+        }
+        
+        // 6. PHP Project Check (Composer, Laravel, Symfony)
+        if !isProject && (fileNames.contains("composer.json") || fileNames.contains("artisan")) {
+            isProject = true
+            let vendorURL = directory.appendingPathComponent("vendor")
+            let laravelCacheURL = directory.appendingPathComponent("storage/framework/cache")
+            let laravelViewsURL = directory.appendingPathComponent("storage/framework/views")
+            let laravelSessionsURL = directory.appendingPathComponent("storage/framework/sessions")
+            let bootstrapCacheURL = directory.appendingPathComponent("bootstrap/cache")
+            
+            if fm.fileExists(atPath: vendorURL.path) {
+                projectItems.append((name: "PHP Vendor (vendor/)", subURL: vendorURL, isDir: true))
+            }
+            if fm.fileExists(atPath: laravelCacheURL.path) {
+                projectItems.append((name: "Laravel Framework Cache", subURL: laravelCacheURL, isDir: true))
+            }
+            if fm.fileExists(atPath: laravelViewsURL.path) {
+                projectItems.append((name: "Laravel Compiled Views", subURL: laravelViewsURL, isDir: true))
+            }
+            if fm.fileExists(atPath: laravelSessionsURL.path) {
+                projectItems.append((name: "Laravel Sessions", subURL: laravelSessionsURL, isDir: true))
+            }
+            if fm.fileExists(atPath: bootstrapCacheURL.path) {
+                projectItems.append((name: "Bootstrap Cache", subURL: bootstrapCacheURL, isDir: true))
+            }
+        }
+        
+        // 7. Python Project Check (virtualenvs, cache)
+        if !isProject && (fileNames.contains("requirements.txt") || fileNames.contains("pyproject.toml") || fileNames.contains("Pipfile") || fileNames.contains("setup.py")) {
+            isProject = true
+            let venvURL = directory.appendingPathComponent(".venv")
+            let venvAltURL = directory.appendingPathComponent("venv")
+            let pycacheURL = directory.appendingPathComponent("__pycache__")
+            let pytestURL = directory.appendingPathComponent(".pytest_cache")
+            
+            if fm.fileExists(atPath: venvURL.path) {
+                projectItems.append((name: "Python Virtual Env (.venv/)", subURL: venvURL, isDir: true))
+            }
+            if fm.fileExists(atPath: venvAltURL.path) {
+                projectItems.append((name: "Python Virtual Env (venv/)", subURL: venvAltURL, isDir: true))
+            }
+            if fm.fileExists(atPath: pycacheURL.path) {
+                projectItems.append((name: "Python Bytecode (__pycache__/)", subURL: pycacheURL, isDir: true))
+            }
+            if fm.fileExists(atPath: pytestURL.path) {
+                projectItems.append((name: "Pytest Cache (.pytest_cache/)", subURL: pytestURL, isDir: true))
+            }
+        }
+        
+        // 8. Rust Project Check
+        if !isProject && fileNames.contains("Cargo.toml") {
+            isProject = true
+            let targetURL = directory.appendingPathComponent("target")
+            if fm.fileExists(atPath: targetURL.path) {
+                projectItems.append((name: "Rust Build Target (target/)", subURL: targetURL, isDir: true))
             }
         }
         

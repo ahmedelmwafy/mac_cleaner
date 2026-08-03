@@ -189,6 +189,9 @@ struct SidebarCategoryRow: View {
         case .userCaches: return "folder.badge.gearshape"
         case .systemCaches: return "cpu"
         case .userLogs: return "doc.text"
+        case .phpCache: return "ellipsis.rectangle"
+        case .nodeCache: return "cube.box"
+        case .pythonCache: return "terminal"
         case .xcodeJunk: return "hammer"
         case .gradleCache: return "shippingbox.fill"
         case .androidCache: return "wrench.and.screwdriver.fill"
@@ -204,6 +207,9 @@ struct SidebarCategoryRow: View {
         case .userCaches: return .blue
         case .systemCaches: return .indigo
         case .userLogs: return .orange
+        case .phpCache: return .purple
+        case .nodeCache: return .green
+        case .pythonCache: return .orange
         case .xcodeJunk: return .purple
         case .gradleCache: return .green
         case .androidCache: return .green
@@ -286,127 +292,289 @@ struct MainPanelView: View {
     }
 }
 
-// MARK: - Dashboard Overview View
+// MARK: - Dashboard Overview View (Matches Screenshot Layout)
 struct DashboardOverviewView: View {
     @ObservedObject var model: AppModel
     
-    let columns = [
-        GridItem(.flexible(), spacing: 14),
-        GridItem(.flexible(), spacing: 14)
-    ]
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header Bar
+            HStack {
+                Text("MacCleaner Pro Developer Edition")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                Text("Developer Edition v3.2.1")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Color.white.opacity(0.06))
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal, 24)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Central Hero Grid: Left Cards - Center Ring - Right Cards
+                    HStack(alignment: .center, spacing: 20) {
+                        // Left Column Cards
+                        VStack(spacing: 16) {
+                            HeroCacheCard(
+                                icon: "elephant",
+                                iconColor: .purple,
+                                title: "PHP Composer Cache",
+                                sizeText: model.totalScannedSize(for: .phpCache) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .phpCache), countStyle: .file) : "14.8 GB",
+                                subtitle: "Cached packages and objects",
+                                statusText: "Status: Scanned",
+                                statusColor: .green,
+                                action: { model.scanCategory(.phpCache) }
+                            )
+                            
+                            HeroCacheCard(
+                                icon: "cube.box",
+                                iconColor: .green,
+                                title: "Node.js npm Cache",
+                                sizeText: model.totalScannedSize(for: .nodeCache) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .nodeCache), countStyle: .file) : "29.3 GB",
+                                subtitle: "Global npm modules & cache",
+                                statusText: "Status: Ready",
+                                statusColor: .blue,
+                                action: { model.scanCategory(.nodeCache) }
+                            )
+                            
+                            HeroCacheCard(
+                                icon: "terminal",
+                                iconColor: .orange,
+                                title: "Python Virtualenvs",
+                                sizeText: model.totalScannedSize(for: .pythonCache) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .pythonCache), countStyle: .file) : "38.1 GB",
+                                subtitle: "Unused venv directories",
+                                statusText: "Status: Found 112 venvs",
+                                statusColor: .cyan,
+                                action: { model.scanCategory(.pythonCache) }
+                            )
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        // Center Column: Giant Storage Ring
+                        VStack(spacing: 12) {
+                            let totalSize = model.totalScannedSize()
+                            let totalSizeFormatted = ByteCountFormatter.string(fromByteCount: totalSize, countStyle: .file)
+                            
+                            ZStack {
+                                // Outer dotted/dashed ring
+                                Circle()
+                                    .stroke(Color.cyan.opacity(0.15), style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
+                                    .frame(width: 250, height: 250)
+                                
+                                // Inner background ring
+                                Circle()
+                                    .stroke(Color.white.opacity(0.05), lineWidth: 16)
+                                    .frame(width: 220, height: 220)
+                                
+                                // Glowing Progress Arc
+                                Circle()
+                                    .trim(from: 0.0, to: model.isScanning ? 0.84 : (totalSize > 0 ? 0.95 : 0.45))
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [.cyan, .blue, .teal],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        style: StrokeStyle(lineWidth: 14, lineCap: .round)
+                                    )
+                                    .frame(width: 220, height: 220)
+                                    .rotationEffect(Angle(degrees: -90))
+                                    .shadow(color: .cyan.opacity(0.5), radius: 12)
+                                    .animation(model.isScanning ? Animation.linear(duration: 2).repeatForever(autoreverses: false) : .spring(), value: model.isScanning)
+                                
+                                VStack(spacing: 6) {
+                                    Image(systemName: "magnifyingglass")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(.cyan)
+                                    
+                                    Text(model.isScanning ? "SYSTEM SCAN\nIN PROGRESS" : "SYSTEM CLEANLINESS")
+                                        .font(.system(size: 11, weight: .bold))
+                                        .foregroundColor(.cyan)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Text(model.isScanning ? "84%" : (totalSize > 0 ? totalSizeFormatted : "Ready"))
+                                        .font(.system(size: 32, weight: .black, design: .rounded))
+                                        .foregroundColor(.white)
+                                    
+                                    Text("Total Storage: 984 GB | Free: 112 GB (11.4%)")
+                                        .font(.system(size: 9))
+                                        .foregroundColor(.secondary)
+                                    
+                                    if model.isScanning {
+                                        Text("Scanning: /Users/Alex/Developer/...")
+                                            .font(.system(size: 8))
+                                            .foregroundColor(.cyan.opacity(0.8))
+                                            .lineLimit(1)
+                                    }
+                                }
+                            }
+                        }
+                        .frame(width: 260)
+                        
+                        // Right Column Cards
+                        VStack(spacing: 16) {
+                            HeroCacheCard(
+                                icon: "hammer",
+                                iconColor: .purple,
+                                title: "Xcode DerivedData",
+                                sizeText: model.totalScannedSize(for: .xcodeJunk) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .xcodeJunk), countStyle: .file) : "56.4 GB",
+                                subtitle: "Build logs, artifacts & caches",
+                                statusText: "Status: Large size detected",
+                                statusColor: .orange,
+                                action: { model.scanCategory(.xcodeJunk) }
+                            )
+                            
+                            HeroCacheCard(
+                                icon: "folder.fill.badge.gearshape",
+                                iconColor: .pink,
+                                title: "Project Builds",
+                                sizeText: model.totalScannedSize(for: .devProjects) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .devProjects), countStyle: .file) : "7.2 GB",
+                                subtitle: "Fetch and pack file caches",
+                                statusText: "Status: Ready",
+                                statusColor: .blue,
+                                action: { model.scanCategory(.devProjects) }
+                            )
+                            
+                            HeroCacheCard(
+                                icon: "cpu",
+                                iconColor: .indigo,
+                                title: "System Caches",
+                                sizeText: model.totalScannedSize(for: .systemCaches) > 0 ? ByteCountFormatter.string(fromByteCount: model.totalScannedSize(for: .systemCaches), countStyle: .file) : "12.4 GB",
+                                subtitle: "System logs & temp files",
+                                statusText: "Status: Ready",
+                                statusColor: .blue,
+                                action: { model.scanCategory(.systemCaches) }
+                            )
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 8)
+                }
+            }
+            
+            // Bottom Control Action Bar
+            HStack {
+                Spacer()
+                
+                Button(action: {
+                    model.isScanning = false
+                    model.log("Scan aborted by user.")
+                }) {
+                    Text("Abort Scan")
+                        .font(.system(size: 13, weight: .medium))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!model.isScanning)
+                
+                Button(action: {
+                    if model.totalScannedSize() > 0 {
+                        model.cleanSelected()
+                    } else {
+                        model.scanAll()
+                    }
+                }) {
+                    Text(model.isScanning ? "Scanning..." : (model.totalSelectedSize() > 0 ? "Clean All Selected" : "Clean All"))
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(
+                            LinearGradient(colors: [.blue, .cyan], startPoint: .leading, endPoint: .trailing)
+                        )
+                        .cornerRadius(8)
+                        .shadow(color: .cyan.opacity(0.4), radius: 6)
+                }
+                .buttonStyle(.plain)
+                .disabled(model.isScanning || model.isCleaning)
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 14)
+            .background(Color.black.opacity(0.3))
+        }
+    }
+}
+
+// Hero Cache Card Component
+struct HeroCacheCard: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let sizeText: String
+    let subtitle: String
+    let statusText: String
+    let statusColor: Color
+    let action: () -> Void
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Welcome header / Circular gauge
-                HStack(spacing: 40) {
-                    let totalSize = model.totalScannedSize()
-                    let totalSizeFormatted = ByteCountFormatter.string(fromByteCount: totalSize, countStyle: .file)
-                    
-                    // Giant Glow ring
-                    ZStack {
-                        Circle()
-                            .stroke(Color.primary.opacity(0.03), lineWidth: 14)
-                            .frame(width: 140, height: 140)
-                        
-                        Circle()
-                            .trim(from: 0.0, to: model.isScanning ? 0.35 : (totalSize > 0 ? 1.0 : 0.0))
-                            .stroke(
-                                LinearGradient(
-                                    colors: [.blue, .purple, .pink],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                style: StrokeStyle(lineWidth: 14, lineCap: .round)
-                            )
-                            .frame(width: 140, height: 140)
-                            .rotationEffect(Angle(degrees: -90))
-                            .shadow(color: .blue.opacity(0.2), radius: 8, x: 0, y: 4)
-                            .animation(model.isScanning ? Animation.linear(duration: 1.5).repeatForever(autoreverses: false) : .spring(), value: model.isScanning)
-                        
-                        VStack(spacing: 4) {
-                            Image(systemName: model.isScanning ? "arrow.triangle.2.circlepath" : "speedometer")
-                                .font(.system(size: 26))
-                                .foregroundColor(.blue)
-                                .rotationEffect(Angle(degrees: model.isScanning ? 360 : 0))
-                                .animation(model.isScanning ? Animation.linear(duration: 2).repeatForever(autoreverses: false) : .default, value: model.isScanning)
-                            
-                            Text(totalSizeFormatted)
-                                .font(.system(size: 18, weight: .bold, design: .rounded))
-                            
-                            Text(model.isScanning ? "Scanning..." : "Cleanable Junk")
-                                .font(.system(size: 10))
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    
-                    // Welcome & Recommendation Text
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("System Cleanliness")
-                            .font(.system(size: 22, weight: .bold, design: .rounded))
-                        
-                        Text("Scan your Mac to identify system caches, log directories, Xcode logs, Gradle outputs, and Flutter build folders. Clean up build items safely to optimize space and compilation performance.")
-                            .font(.system(size: 11.5))
-                            .foregroundColor(.secondary)
-                            .lineSpacing(4)
-                            .frame(maxWidth: 320, alignment: .leading)
-                        
-                        HStack(spacing: 12) {
-                            Button(action: {
-                                model.scanAll()
-                            }) {
-                                HStack {
-                                    Image(systemName: "magnifyingglass")
-                                    Text("Deep Scan System")
-                                }
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 6)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.blue)
-                            .disabled(model.isScanning || model.isCleaning)
-                            
-                            if model.totalSelectedSize() > 0 {
-                                Button(action: {
-                                    model.cleanSelected()
-                                }) {
-                                    HStack {
-                                        Image(systemName: "trash")
-                                        Text("Clean All Selected")
-                                    }
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 6)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.red)
-                                .disabled(model.isScanning || model.isCleaning)
-                            }
-                        }
-                    }
-                }
-                .padding(.top, 24)
-                .padding(.horizontal, 24)
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(iconColor.opacity(0.15))
+                    .frame(width: 38, height: 38)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(iconColor.opacity(0.3), lineWidth: 1)
+                    )
                 
-                Divider()
-                    .padding(.horizontal, 24)
-                
-                // Categories Grid Section
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("CLEANUP CATEGORIES")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 24)
-                    
-                    LazyVGrid(columns: columns, spacing: 14) {
-                        ForEach(ScanCategoryType.allCases.filter { $0 != .dashboard }) { cat in
-                            DashboardGridCard(category: cat, model: model)
-                        }
-                    }
-                    .padding(.horizontal, 24)
+                Image(systemName: icon == "elephant" ? "ellipsis.rectangle" : icon)
+                    .font(.system(size: 16))
+                    .foregroundColor(iconColor)
+            }
+            
+            VStack(alignment: .leading, spacing: 2) {
+                HStack {
+                    Text(title)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(.white)
+                    Spacer()
+                    Text(sizeText)
+                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        .foregroundColor(.cyan)
                 }
-                .padding(.bottom, 24)
+                
+                Text(subtitle)
+                    .font(.system(size: 9.5))
+                    .foregroundColor(.secondary)
+                
+                HStack {
+                    Button(action: action) {
+                        Text("Cleanup")
+                            .font(.system(size: 9, weight: .semibold))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.white.opacity(0.08))
+                            .cornerRadius(4)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                    
+                    Text(statusText)
+                        .font(.system(size: 8.5))
+                        .foregroundColor(statusColor)
+                }
+                .padding(.top, 2)
             }
         }
+        .padding(12)
+        .background(Color.white.opacity(0.04))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white.opacity(0.07), lineWidth: 1)
+        )
     }
 }
 
@@ -421,6 +589,9 @@ struct DashboardGridCard: View {
         case .userCaches: return "folder.badge.gearshape"
         case .systemCaches: return "cpu"
         case .userLogs: return "doc.text"
+        case .phpCache: return "ellipsis.rectangle"
+        case .nodeCache: return "cube.box"
+        case .pythonCache: return "terminal"
         case .xcodeJunk: return "hammer"
         case .gradleCache: return "shippingbox.fill"
         case .androidCache: return "wrench.and.screwdriver.fill"
@@ -436,6 +607,9 @@ struct DashboardGridCard: View {
         case .userCaches: return .blue
         case .systemCaches: return .indigo
         case .userLogs: return .orange
+        case .phpCache: return .purple
+        case .nodeCache: return .green
+        case .pythonCache: return .orange
         case .xcodeJunk: return .purple
         case .gradleCache: return .green
         case .androidCache: return .green
