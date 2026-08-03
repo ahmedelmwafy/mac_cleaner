@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "maccleanerapp",
     "public": "landing_page",
     "ignore": [
       "firebase.json",
