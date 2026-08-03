@@ -173,24 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle DMG Download click
   const dmgButtons = document.querySelectorAll('.download-dmg-btn');
   dmgButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
+    btn.addEventListener('click', () => {
       incrementDownloadCount('DMG');
-      alert(currentLang === 'en' 
-        ? 'Downloading MacCleanerPro.dmg package for macOS...' 
-        : 'جاري تنزيل حزمة MacCleanerPro.dmg لنظام الماك...');
     });
   });
 
   // Handle ZIP Download click
   const zipButtons = document.querySelectorAll('.download-zip-btn');
   zipButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
+    btn.addEventListener('click', () => {
       incrementDownloadCount('ZIP');
-      alert(currentLang === 'en' 
-        ? 'Downloading MacCleanerPro.zip application bundle for macOS...' 
-        : 'جاري تنزيل تطبيق MacCleanerPro.zip لنظام الماك...');
     });
   });
 });
